@@ -2,29 +2,26 @@
 
 ## Table of Contents
 
--   [1. HTTP Methods](#1-http-methods)
--   [2. Context API vs Redux](#2-context-api-vs-redux)
--   [3. DOM & Virtual DOM](#3-dom--virtual-dom)
--   [4. Closures in JS](#4-closures-in-js)
--   [5. Event Loop](#5-event-loop)
--   [6. Promises & Combinators](#6-promises--combinators)
--   [7. Sync vs Async Functions](#7-sync-vs-async-functions)
--   [8. Deep Copy vs Shallow Copy](#8-deep-copy-vs-shallow-copy)
--   [9. setTimeout & setInterval](#9-settimeout--setinterval)
--   [10. React Hooks](#10-react-hooks)
--   [11. Authentication vs
-    Authorization](#11-authentication-vs-authorization)
--   [12. React.js vs Next.js](#12-react.js-vs-next.js)
--   [13. Single-Page Application
-    (SPA)](#13-single-page-application-(spa))
--   [14. Middleware](#14-middleware)
--   [15. CSS Flexbox](#15-css-flexbox)
--   [16. WebSockets](#16-websockets)
--   [17. Boilerplate: Simple GET
-    Route](#17-boilerplate-simple-get-route)
--   [18. MVC Architecture](#18-mvc-architecture)
--   [19. SQL vs NoSQL Databases](#19-sql-vs-nosql-databases)
--   [20. Idempotency](#20-idempotency)
+- [1. HTTP Methods](#1-http-methods)
+- [2. Context API vs Redux](#2-context-api-vs-redux)
+- [3. DOM & Virtual DOM](#3-dom--virtual-dom)
+- [4. Closures in JS](#4-closures-in-js)
+- [5. Event Loop](#5-event-loop)
+- [6. Promises & Combinators](#6-promises--combinators)
+- [7. Sync vs Async Functions](#7-sync-vs-async-functions)
+- [8. Deep Copy vs Shallow Copy](#8-deep-copy-vs-shallow-copy)
+- [9. setTimeout & setInterval](#9-settimeout--setinterval)
+- [10. React Hooks](#10-react-hooks)
+- [11. Authentication vs Authorization](#11-authentication-vs-authorization)
+- [12. React.js vs Next.js](#12-reactjs-vs-nextjs)
+- [13. Single-Page Application (SPA)](#13-single-page-application-spa)
+- [14. Middleware](#14-middleware)
+- [15. CSS Flexbox](#15-css-flexbox)
+- [16. WebSockets](#16-websockets)
+- [17. Boilerplate: Simple GET Route](#17-boilerplate-simple-get-route)
+- [18. MVC Architecture](#18-mvc-architecture)
+- [19. SQL vs NoSQL Databases](#19-sql-vs-nosql-databases)
+- [20. Idempotency](#20-idempotency)
 
 ------------------------------------------------------------------------
 
@@ -58,6 +55,7 @@ this, developers used POST for reads (breaking caching) or shoehorned
 everything into query strings. Example: a search endpoint with 20 filter
 fields, pagination, and sorting sent as a JSON body.
 
+```js
     QUERY /api/search HTTP/1.1
     Content-Type: application/json
 
@@ -66,6 +64,7 @@ fields, pagination, and sorting sent as a JSON body.
       "pagination": { "page": 1, "size": 50 },
       "sort": [{ "field": "createdAt", "direction": "desc" }]
     }
+```
 
 Use cases: search APIs with many filter fields, reporting endpoints,
 analytics queries --- anywhere a simple query string isn't enough but
@@ -87,6 +86,7 @@ Context API works by wrapping components in a Provider , and any child
 can consume the value using useContext . It's great for low-frequency
 updates like theme, auth state, or locale.
 
+```js
     const ThemeContext = createContext();
     function App() {
       return (
@@ -96,6 +96,7 @@ updates like theme, auth state, or locale.
       );
     }
     const theme = useContext(ThemeContext);
+```
 
 Redux introduces a global store, actions, and reducers. Every state
 change flows through a predictable pipeline: Action → Reducer → New
@@ -139,6 +140,8 @@ A closure is when a function "remembers" variables from its outer scope
 even after that outer function has returned. It's one of the most
 fundamental concepts in JavaScript.
 
+```js
+
     function makeCounter() {
       let count = 0; // outer variable
       return function() {
@@ -149,6 +152,8 @@ fundamental concepts in JavaScript.
     const counter = makeCounter();
     counter(); // 1
     counter(); // 2 — count persists!
+
+```
 
 Here, count should be gone after makeCounter() returns --- but it isn't,
 because the returned function holds a reference to it via the closure.
@@ -184,11 +189,15 @@ the task queue (also called the macrotask queue).
 Microtask Queue --- Promise .then() callbacks, queueMicrotask() . This
 runs before the task queue after every task.
 
+```js
+
     console.log("1");
     setTimeout(() => console.log("2"), 0);
     Promise.resolve().then(() => console.log("3"));
     console.log("4");
     // Output: 1, 4, 3, 2
+
+```
 
 Why? "1" and "4" are synchronous. Then the event loop checks the
 microtask queue first --- Promise resolves → "3". Then the macrotask
@@ -240,6 +249,8 @@ operations like network requests or file reads.
 In JavaScript, async is handled through callbacks → Promises →
 async/await (syntactic sugar over Promises).
 
+```js
+
     // Async/Await
     async function getUser(id) {
       try {
@@ -250,6 +261,8 @@ async/await (syntactic sugar over Promises).
         console.error(err);
       }
     }
+
+```
 
 async functions always return a Promise. await pauses execution inside
 the async function only --- the rest of the app keeps running. Under the
@@ -268,18 +281,26 @@ Shallow copy creates a new object, but nested objects/arrays still share
 the same reference. Changing a nested property in the copy affects the
 original.
 
+```js
+
     const obj = { a: 1, nested: { b: 2 } };
     const shallow = { ...obj };
     shallow.nested.b = 99; // also changes obj.nested.b!
 
+```
+
 Deep copy creates a completely independent clone --- every level is a
 new reference.
+
+```js
 
     // Modern approach (structured clone)
     const deep = structuredClone(obj);
 
     // Old approach (has limitations — loses functions, Dates)
     const deep2 = JSON.parse(JSON.stringify(obj));
+
+```
 
 Shallow copy methods: spread operator ( ...obj ), Object.assign() ,
 Array.slice() . These only go one level deep.
@@ -304,6 +325,8 @@ it.
 setInterval(fn, delay) --- Executes a function repeatedly every delay
 ms. Returns a timer ID for clearInterval(id) .
 
+```js
+
     // Debounce pattern using setTimeout
     function debounce(fn, delay) {
       let timer;
@@ -312,6 +335,8 @@ ms. Returns a timer ID for clearInterval(id) .
         timer = setTimeout(() => fn(...args), delay);
       };
     }
+
+```
 
 A key difference: setInterval fires at a fixed interval regardless of
 how long the callback takes. If the callback takes longer than the
@@ -340,7 +365,10 @@ useMemo --- Memoizes a computed value. Only recomputes when dependencies
 change. Use for expensive calculations --- not every computation needs
 it.
 
+```js
+
     const sorted = useMemo(() => items.sort(...), [items]);
+```
 
 useCallback --- Memoizes a function reference. Important when passing
 callbacks to child components wrapped in React.memo --- prevents
@@ -352,6 +380,8 @@ an object: const { id } = useParams() .
 Custom Hooks --- Any function starting with use that calls other hooks.
 They're the way to extract and reuse stateful logic.
 
+```js
+
     function useFetch(url) {
       const [data, setData] = useState(null);
       useEffect(() => {
@@ -359,6 +389,8 @@ They're the way to extract and reuse stateful logic.
       }, [url]);
       return data;
     }
+
+```
 
 > Rules of hooks: only call at the top level (not inside
 > conditionals/loops) and only call from React functions. React relies
@@ -385,8 +417,12 @@ cookie). Authorization uses claims/roles inside that token. A middleware
 intercepts requests, validates the token (authentication), then checks
 if the user's role permits the route (authorization).
 
+```js
+
     // Express example
     app.get('/admin', authenticate, authorize('admin'), handler);
+
+```
 
 > Common follow-up: JWT structure --- header.payload.signature. The
 > payload contains claims like userId and role. The signature is
@@ -466,6 +502,8 @@ checks for a token in the Authorization header --- if missing, it
 terminates the cycle by returning a 401. If present, it logs and calls
 next() , allowing the request to reach the /orders route handler.
 
+```js
+
     function auth(req, res, next) {
       const token = req.headers.authorization;
       if (!token) {
@@ -479,6 +517,7 @@ next() , allowing the request to reach the /orders route handler.
       res.json({ orders: ["Order1", "Order2"] });
     });
 
+``` 
 This pattern is the foundation of Express auth --- the middleware acts
 as a gatekeeper. Any route that needs protection simply adds the auth
 function as a second argument. Middleware can also be applied globally
@@ -517,6 +556,8 @@ line (nowrap).
 
 gap --- spacing between items. Much cleaner than using margins.
 
+```css
+
     /* Center something perfectly */
     .container {
       display: flex;
@@ -525,6 +566,7 @@ gap --- spacing between items. Much cleaner than using margins.
       height: 100vh;
     }
 
+```
 Key item properties: flex: 1 (shorthand for grow, shrink, basis ---
 makes item take up remaining space). align-self overrides align-items
 for one item.
@@ -544,6 +586,8 @@ The lifecycle: client sends an HTTP "upgrade" request → server upgrades
 the connection to WebSocket → both parties can now send frames anytime →
 either side closes the connection.
 
+```js
+
     // Client
     const ws = new WebSocket('wss://api.example.com/chat');
     ws.onopen = () => ws.send('Hello!');
@@ -555,6 +599,8 @@ either side closes the connection.
         wss.clients.forEach(client => client.send(msg)); // broadcast
       });
     });
+
+```
 
 Use cases: real-time chat, live dashboards, multiplayer games,
 collaborative editing (like Google Docs), live notifications, stock
@@ -573,6 +619,8 @@ WebSockets are the only true bidirectional option.
 
 Express.js (Node.js):
 
+```js
+
     const express = require('express');
     const app = express();
     app.use(express.json()); // parse JSON bodies
@@ -589,9 +637,11 @@ Express.js (Node.js):
     });
 
     app.listen(3000, () => console.log('Server on port 3000'));
+```
 
 FastAPI (Python):
 
+```py
     from fastapi import FastAPI, HTTPException
 
     app = FastAPI()
@@ -603,6 +653,7 @@ FastAPI (Python):
             raise HTTPException(status_code=404, detail="Not found")
         return {"data": user}
 
+```
 > Always: use try/catch, return proper HTTP status codes (200 OK, 201
 > Created, 400 Bad Request, 401 Unauthorized, 404 Not Found, 500 Server
 > Error), and validate/sanitize input. Never trust req.params or
@@ -625,6 +676,8 @@ Controller --- The glue. Handles incoming requests, calls the Model to
 get/update data, and sends the response (or tells the View what to
 render). Contains your route handler logic.
 
+```js
+
     // Controller
     async function getUser(req, res) {
       const user = await UserModel.findById(req.params.id); // calls Model
@@ -635,6 +688,8 @@ render). Contains your route handler logic.
     const UserModel = {
       findById: (id) => db.query('SELECT * FROM users WHERE id = $1', [id])
     };
+
+```
 
 The benefit is separation of concerns --- you can change your database
 (Model) without touching the UI (View), or redesign the UI without
@@ -667,11 +722,17 @@ cases). Examples: MongoDB (documents), Redis (key-value), Cassandra
 Best for: unstructured or rapidly changing data, huge write throughput,
 caching (Redis), real-time analytics.
 
+```sql
     -- SQL: strict schema
     CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL);
 
+```
+
+```js
+
     // MongoDB: flexible document
     { _id: ObjectId, email: "a@b.com", preferences: { theme: "dark" } }
+```
 
 A common real-world pattern: PostgreSQL for primary application data +
 Redis for caching/sessions.
@@ -700,6 +761,8 @@ Idempotency-Key: uuid ). The server stores the result of the first
 request. If the same key comes again, it returns the cached result
 without re-executing.
 
+```js
+
     // Server-side idempotency check
     app.post('/payments', async (req, res) => {
       const key = req.headers['idempotency-key'];
@@ -711,6 +774,7 @@ without re-executing.
       res.json(result);
     });
 
+```
 > Stripe uses this pattern for every payment API call. It's a must-know
 > for any fintech or payment system interview. They'll respect you for
 > bringing it up proactively.
