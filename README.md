@@ -30,25 +30,25 @@
 HTTP methods define what action you want to perform on a resource. The
 core ones are:
 
-GET --- Retrieve data. No request body. Idempotent and safe. Example:
+```GET``` --- Retrieve data. No request body. Idempotent and safe. Example:
 fetching a user profile.
 
-POST --- Create a new resource. Has a request body. Not idempotent ---
+```POST``` --- Create a new resource. Has a request body. Not idempotent ---
 calling it twice creates two resources. Example: submitting a form.
 
-PUT --- Replace an entire resource. Idempotent --- sending the same PUT
+```PUT``` --- Replace an entire resource. Idempotent --- sending the same PUT
 twice gives the same result. Example: updating a full user object.
 
-PATCH --- Partially update a resource. Only send the fields you want to
+```PATCH``` --- Partially update a resource. Only send the fields you want to
 change. Example: updating just a user's email.
 
-DELETE --- Remove a resource. Idempotent. Example: deleting a post.
+```DELETE``` --- Remove a resource. Idempotent. Example: deleting a post.
 
 In an interview, I'd also mention OPTIONS (used in CORS preflight
 requests to check what methods a server allows) and HEAD (like GET but
 returns only headers, useful to check if a resource exists).
 
-QUERY --- Like GET, but with a body. Safe and idempotent, but instead of
+```QUERY``` --- Like GET, but with a body. Safe and idempotent, but instead of
 cramming filters into a URL, you send a structured JSON payload. Solves
 the problem of complex search queries hitting URL length limits. Before
 this, developers used POST for reads (breaking caching) or shoehorned
@@ -179,14 +179,14 @@ the main thread.
 
 The execution model has three key parts:
 
-Call Stack --- where synchronous code runs, LIFO (last in, first out).
+```Call Stack``` --- where synchronous code runs, LIFO (last in, first out).
 When a function is called, it's pushed. When it returns, it's popped.
 
-Web APIs / Task Queue --- browser-provided async mechanisms (setTimeout,
+```Web APIs / Task Queue``` --- browser-provided async mechanisms (setTimeout,
 fetch, DOM events). When async work completes, the callback is pushed to
 the task queue (also called the macrotask queue).
 
-Microtask Queue --- Promise .then() callbacks, queueMicrotask() . This
+```Microtask Queue``` --- Promise .then() callbacks, queueMicrotask() . This
 runs before the task queue after every task.
 
 ```js
@@ -215,20 +215,20 @@ has three states: pending, fulfilled, or rejected. You chain it with
 
 The four key combinators:
 
-Promise.all(arr) --- Waits for ALL promises to resolve. If any one
+```Promise.all(arr)``` --- Waits for ALL promises to resolve. If any one
 rejects, it immediately rejects. Use when you need all results and a
 single failure should abort everything. Example: fetching user +
 orders + preferences in parallel.
 
-Promise.allSettled(arr) --- Waits for ALL promises, regardless of
+```Promise.allSettled(arr)``` --- Waits for ALL promises, regardless of
 outcome. Returns an array of {status, value/reason} objects. Use when
 you want every result even if some fail.
 
-Promise.race(arr) --- Settles as soon as the first promise settles
+```Promise.race(arr)``` --- Settles as soon as the first promise settles
 (either way). Use for timeouts: race a fetch against a setTimeout that
 rejects after 5 seconds.
 
-Promise.any(arr) --- Resolves as soon as the first promise fulfills.
+```Promise.any(arr)``` --- Resolves as soon as the first promise fulfills.
 Only rejects if all fail. Use for redundant requests --- send to
 multiple servers, use whoever responds first.
 
@@ -317,12 +317,12 @@ Dates, circular refs), or lodash's \_.cloneDeep() .
 
 Both are Web API timer functions, but they work differently.
 
-setTimeout(fn, delay) --- Executes a function once after at least delay
+```setTimeout(fn, delay)``` --- Executes a function once after at least delay
 milliseconds. The "at least" is key: if the call stack is busy, it'll
 run later. Returns a timer ID you can pass to clearTimeout(id) to cancel
 it.
 
-setInterval(fn, delay) --- Executes a function repeatedly every delay
+```setInterval(fn, delay)``` --- Executes a function repeatedly every delay
 ms. Returns a timer ID for clearInterval(id) .
 
 ```js
@@ -354,14 +354,14 @@ schedule the next one only after it completes.
 Hooks let functional components use state and lifecycle features that
 were previously only in class components.
 
-useState --- Local component state. Returns \[value, setter\]. Calling
+```useState``` --- Local component state. Returns \[value, setter\]. Calling
 the setter schedules a re-render.
 
-useEffect --- Runs side effects after render. The dependency array
+```useEffect``` --- Runs side effects after render. The dependency array
 controls when it re-runs. Return a cleanup function for
 subscriptions/timers. Empty array = run once on mount.
 
-useMemo --- Memoizes a computed value. Only recomputes when dependencies
+```useMemo``` --- Memoizes a computed value. Only recomputes when dependencies
 change. Use for expensive calculations --- not every computation needs
 it.
 
@@ -370,14 +370,14 @@ it.
     const sorted = useMemo(() => items.sort(...), [items]);
 ```
 
-useCallback --- Memoizes a function reference. Important when passing
+```useCallback``` --- Memoizes a function reference. Important when passing
 callbacks to child components wrapped in React.memo --- prevents
 unnecessary re-renders.
 
-useParams (React Router) --- Reads URL params like /user/:id . Returns
+```useParams (React Router)``` --- Reads URL params like /user/:id . Returns
 an object: const { id } = useParams() .
 
-Custom Hooks --- Any function starting with use that calls other hooks.
+```Custom Hooks``` --- Any function starting with use that calls other hooks.
 They're the way to extract and reuse stateful logic.
 
 ```js
@@ -400,11 +400,11 @@ They're the way to extract and reuse stateful logic.
 
 These are frequently confused. The simplest way I frame it:
 
-Authentication = "Who are you?" --- Verifying identity. This is the
+```Authentication``` = "Who are you?" --- Verifying identity. This is the
 login step: checking that the username/password matches, or validating a
 JWT token, or verifying an OAuth token from Google.
 
-Authorization = "What are you allowed to do?" --- Checking permissions.
+```Authorization``` = "What are you allowed to do?" --- Checking permissions.
 After identity is confirmed, the system decides if this user can access
 a specific resource or perform an action.
 
@@ -431,29 +431,29 @@ if the user's role permits the route (authorization).
 
 # 12. React.js vs Next.js
 
-React is a UI library --- it handles rendering components, managing
+```React``` is a UI library --- it handles rendering components, managing
 state, and the virtual DOM. It does nothing about routing, data fetching
 strategy, or how your app is served. You're responsible for wiring
 everything up.
 
-Next.js is a React framework --- it builds on top of React and makes
+```Next.js``` is a React framework --- it builds on top of React and makes
 opinionated decisions about those things for you.
 
 Key things Next.js adds:
 
-Rendering strategies --- SSR (Server-Side Rendering: HTML generated per
+```Rendering strategies``` --- SSR (Server-Side Rendering: HTML generated per
 request), SSG (Static Site Generation: HTML built at deploy time), ISR
 (Incremental Static Regeneration: cached but periodically rebuilt).
 React alone is CSR (Client-Side Rendering) --- the browser does all the
 work.
 
-File-based routing --- Creating app/about/page.tsx automatically creates
+```File-based routing``` --- Creating app/about/page.tsx automatically creates
 the /about route. No react-router needed.
 
-API routes --- You can write backend endpoints inside the same Next.js
+```API routes``` --- You can write backend endpoints inside the same Next.js
 project.
 
-SEO --- SSR/SSG means the HTML is fully rendered when search engine
+```SEO``` --- SSR/SSG means the HTML is fully rendered when search engine
 crawlers hit it. Pure React CSR returns an empty shell, which hurts SEO.
 
 > When would you use React without Next.js? Dashboards behind a login
@@ -541,20 +541,20 @@ it controls how children (flex items) are sized and positioned.
 
 Key container properties:
 
-flex-direction --- row (default) or column. Sets the main axis.
+```flex-direction``` --- row (default) or column. Sets the main axis.
 
-justify-content --- aligns items along the main axis. Values:
+```justify-content``` --- aligns items along the main axis. Values:
 flex-start, center, flex-end, space-between (gaps between items),
 space-around, space-evenly.
 
-align-items --- aligns items along the cross axis (perpendicular to
+```align-items``` --- aligns items along the cross axis (perpendicular to
 main). Values: stretch (default), center, flex-start, flex-end,
 baseline.
 
-flex-wrap --- whether items wrap to the next line (wrap) or stay on one
+```flex-wrap``` --- whether items wrap to the next line (wrap) or stay on one
 line (nowrap).
 
-gap --- spacing between items. Much cleaner than using margins.
+```gap``` --- spacing between items. Much cleaner than using margins.
 
 ```css
 
@@ -664,15 +664,15 @@ FastAPI (Python):
 MVC (Model-View-Controller) is a design pattern that separates an
 application into three interconnected layers:
 
-Model --- The data layer. Represents the business data and logic. Talks
+```Model``` --- The data layer. Represents the business data and logic. Talks
 to the database. Defines schemas, queries, and validations. In a Node
 app, this would be your Mongoose models or Prisma schema.
 
-View --- The presentation layer. What the user sees. In traditional web
+```View``` --- The presentation layer. What the user sees. In traditional web
 apps, this is HTML templates (EJS, Handlebars). In modern apps, it's
 your React components.
 
-Controller --- The glue. Handles incoming requests, calls the Model to
+```Controller``` --- The glue. Handles incoming requests, calls the Model to
 get/update data, and sends the response (or tells the View what to
 render). Contains your route handler logic.
 
@@ -705,7 +705,7 @@ touching business logic.
 The choice comes down to your data structure, scale requirements, and
 consistency needs.
 
-SQL (Relational) --- Data is organized in tables with rows and columns.
+```SQL (Relational)``` --- Data is organized in tables with rows and columns.
 Schema is defined upfront. Relationships enforced with foreign keys.
 ACID-compliant (Atomicity, Consistency, Isolation, Durability). Queried
 with SQL. Examples: PostgreSQL, MySQL.
@@ -714,7 +714,7 @@ Best for: structured, relational data (users, orders, products),
 financial systems where consistency is critical, complex queries with
 JOINs.
 
-NoSQL --- Flexible schemas. Documents, key-value pairs, graphs, or wide
+```NoSQL``` --- Flexible schemas. Documents, key-value pairs, graphs, or wide
 columns. Scales horizontally more easily. Eventual consistency (in most
 cases). Examples: MongoDB (documents), Redis (key-value), Cassandra
 (wide column), Neo4j (graph).
